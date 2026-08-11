@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Stream & Download</title>
+  <style>
+    body {
+      background-color: #141414;
+      color: white;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #e50914;
+    }
+    .movie-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .movie-card {
+      background: #222;
+      border-radius: 8px;
+      overflow: hidden;
+      text-align: center;
+      padding-bottom: 10px;
+    }
+    .movie-card img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+    }
+    .btn {
+      display: inline-block;
+      margin: 5px;
+      padding: 8px 12px;
+      background: #e50914;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .btn-download {
+      background: #28a745;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>MovieHub - Watch & Download</h1>
+  <div class="movie-grid" id="movies"></div>
+
+  <script>
+    const API_KEY = 'YOUR_TMDB_API_KEY'; // এখানে তোর TMDB API Key বসাবি
+    const API_URL = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
+    const IMG_PATH = 'https://image.tmdb.org/t/p/w500';
+
+    async function getMovies() {
+      const res = await fetch(API_URL);
+      const data = await res.json();
+      showMovies(data.results);
+    }
+
+    function showMovies(movies) {
+      const moviesEl = document.getElementById('movies');
+      moviesEl.innerHTML = '';
+
+      movies.forEach((movie) => {
+        const { title, poster_path, overview } = movie;
+        const movieCard = document.createElement('div');
+        movieCard.classList.add('movie-card');
+
+        movieCard.innerHTML = `
+          <img src="${IMG_PATH + poster_path}" alt="${title}">
+          <h3>${title}</h3>
+          <a href="#" class="btn">Watch Online</a>
+          <a href="#" class="btn btn-download">Download</a>
+        `;
+        moviesEl.appendChild(movieCard);
+      });
+    }
+
+    getMovies();
+  </script>
+</body>
+</html>
